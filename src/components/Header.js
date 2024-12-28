@@ -1,23 +1,81 @@
-/**
- * Header Component
- * Displays navigation links for the application.
- */
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
     return (
-        <header className="bg-blue-600 p-4">
-            <div className="logo text-white font-bold text-3xl">
-                <h1>Developer Zone</h1>
+        <header className="bg-white text-black sticky top-0 z-50 shadow-md ">
+            <div className="container mx-auto flex items-center justify-between p-4 ">
+                {/* Logo Section */}
+                <div className="text-2xl font-bold">
+                    <h1>Developer Zone</h1>
+                </div>
+
+                {/* Hamburger Menu for Small Screens */}
+                <button
+                    className="sm:hidden block"
+                    onClick={toggleMenu}
+                    aria-label="Toggle Menu"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="w-8 h-8"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    </svg>
+                </button>
+
+                {/* Navigation Links */}
+                <nav
+                    className={`${
+                        isMenuOpen ? 'block md:shadow-lg' : 'hidden'
+                    } absolute sm:static left-0 right-0 top-[70px] bg-white   sm:flex sm:items-center sm:gap-8 sm:mt-0 p-4 sm:p-0`}
+                >
+                    <Link
+                        to="/"
+                        className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
+                    >
+                        Home
+                    </Link>
+                    <Link
+                        to="/api-docs"
+                        className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
+                    >
+                        API Documentation
+                    </Link>
+                    <Link
+                        to="/test-environment"
+                        className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
+                    >
+                        Test Environment
+                    </Link>
+                    <Link
+                        to="/logs"
+                        className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
+                    >
+                        API Logs
+                    </Link>
+                    <Link
+                        to="/status"
+                        className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
+                    >
+                        System Status
+                    </Link>
+                </nav>
             </div>
-            <nav className="mt-4">
-                <Link to="/" className="text-white hover:text-yellow-500 mx-4">Home</Link>
-                <Link to="/api-docs" className="text-white hover:text-yellow-500 mx-4">API Documentation</Link>
-                <Link to="/test-environment" className="text-white hover:text-yellow-500 mx-4">Test Environment</Link>
-                <Link to="/logs" className="text-white hover:text-yellow-500 mx-4">API Logs</Link>
-                <Link to="/status" className="text-white hover:text-yellow-500 mx-4">System Status</Link>
-            </nav>
         </header>
     );
 };
