@@ -8,6 +8,10 @@ const Header = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    const closeMenu = () => {
+        setIsMenuOpen(false);
+    };
+
     return (
         <header className="bg-white text-black sticky top-0 z-50 shadow-md ">
             <div className="container mx-auto flex items-center justify-between p-4 ">
@@ -42,34 +46,39 @@ const Header = () => {
                 <nav
                     className={`${
                         isMenuOpen ? 'block md:shadow-lg' : 'hidden'
-                    } absolute sm:static left-0 right-0 top-[70px] bg-white   sm:flex sm:items-center sm:gap-8 sm:mt-0 p-4 sm:p-0`}
+                    } absolute sm:static left-0 right-0 top-[70px] bg-white sm:flex sm:items-center sm:gap-8 sm:mt-0 p-4 sm:p-0`}
                 >
                     <Link
                         to="/"
+                        onClick={closeMenu}
                         className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
                     >
                         Home
                     </Link>
                     <Link
                         to="/api-docs"
+                        onClick={closeMenu}
                         className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
                     >
                         API Documentation
                     </Link>
                     <Link
                         to="/test-environment"
+                        onClick={closeMenu}
                         className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
                     >
                         Test Environment
                     </Link>
                     <Link
                         to="/logs"
+                        onClick={closeMenu}
                         className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
                     >
                         API Logs
                     </Link>
                     <Link
                         to="/status"
+                        onClick={closeMenu}
                         className="block py-2 sm:py-0 text-lg hover:text-yellow-400"
                     >
                         System Status
