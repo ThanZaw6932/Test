@@ -21,6 +21,9 @@ const slides = [
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [githubProfiles, setGithubProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -30,6 +33,24 @@ const Home = () => {
     }, 5000); // Smooth auto-slide every 5 seconds
     return () => clearInterval(timer);
   }, [isHovered]);
+
+  useEffect(() => {
+    const fetchGitHubProfiles = async () => {
+      const users = ['thanzaw6932', 'octocat', 'mojombo']; // Add more GitHub usernames
+      try {
+        const profileData = await Promise.all(
+          users.map((user) => fetch(`https://api.github.com/users/${user}`).then(res => res.json()))
+        );
+        setGithubProfiles(profileData);
+      } catch (error) {
+        setError('Failed to fetch GitHub profiles');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGitHubProfiles();
+  }, []);
 
   return (
     <div className="home-container p-6 sm:p-12 bg-gradient-to-b from-gray-50 to-gray-200 text-gray-800">
@@ -56,43 +77,18 @@ const Home = () => {
           <p className="text-sm sm:text-lg text-gray-700 mb-6 leading-relaxed">
             {slides[currentIndex].description}
           </p>
-         
         </div>
       </div>
 
       {/* Features Section */}
       <section className="features mt-12 grid gap-8 sm:gap-10 sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          {
-            title: 'API Documentation',
-            description:
-              'Access developer-friendly API documentation for seamless integration with REST and GraphQL.',
-          },
-          {
-            title: 'Test Environment',
-            description:
-              'Leverage a sandboxed environment to simulate payment flows and validate security.',
-          },
-          {
-            title: 'API Logs',
-            description:
-              'Analyze transaction logs in real time to debug errors and optimize performance.',
-          },
-          {
-            title: 'Security Compliance',
-            description:
-              'Ensure adherence to PCI DSS and ISO/IEC 27001 with advanced encryption technologies.',
-          },
-          {
-            title: 'Performance Metrics',
-            description:
-              'Monitor response times, uptime, and performance metrics for scalability.',
-          },
-          {
-            title: 'Fraud Detection',
-            description:
-              'Detect and prevent fraud using AI-driven secure transaction analysis.',
-          },
+        {[ 
+          { title: 'API Documentation', description: 'Access developer-friendly API documentation for seamless integration with REST and GraphQL.' },
+          { title: 'Test Environment', description: 'Leverage a sandboxed environment to simulate payment flows and validate security.' },
+          { title: 'API Logs', description: 'Analyze transaction logs in real time to debug errors and optimize performance.' },
+          { title: 'Security Compliance', description: 'Ensure adherence to PCI DSS and ISO/IEC 27001 with advanced encryption technologies.' },
+          { title: 'Performance Metrics', description: 'Monitor response times, uptime, and performance metrics for scalability.' },
+          { title: 'Fraud Detection', description: 'Detect and prevent fraud using AI-driven secure transaction analysis.' },
         ].map((feature, index) => (
           <div
             key={index}
@@ -106,6 +102,47 @@ const Home = () => {
             </p>
           </div>
         ))}
+      </section>
+
+      {/* GitHub Profile Section */}
+      <section className="github-profile mt-12 bg-white p-6 sm:p-8 rounded-xl shadow-md text-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-blue-700 mb-4">
+          GitHub Profiles
+        </h2>
+        {loading ? (
+          <p className="text-gray-600">Loading...</p>
+        ) : error ? (
+          <p className="text-red-600">Error: {error}</p>
+        ) : (
+          githubProfiles.length > 0 ? (
+            <div className="profile-content grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {githubProfiles.map((profile, index) => (
+                <div key={index} className="profile-card flex flex-col items-center bg-white p-6 sm:p-8 shadow-md rounded-xl">
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile.name || 'GitHub User'}
+                    className="w-24 h-24 rounded-full mb-4"
+                  />
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    {profile.name || 'Anonymous'}
+                  </h3>
+                  <p className="text-gray-600">
+                    <a
+                      href={profile.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {profile.login}
+                    </a>
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No profiles found.</p>
+          )
+        )}
       </section>
     </div>
   );
